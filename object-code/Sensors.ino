@@ -13,14 +13,14 @@
 #define SEALEVELPRESSURE_HPA (1013.25)
 #define AN A1 // broche de sortie du module
 
-StaticJsonBuffer<200> jsonBuffer;
+StaticJsonBuffer<200> jsonBuffer;// On crée notre buffer qui sera utilisé pour les données en format Json
 Adafruit_BME280 bme; // I2C
 int valeur;
 int feu;
 int echantillons = 10;
 unsigned long sum = 0;
 unsigned long avg;
-JsonObject& root = jsonBuffer.createObject();
+JsonObject& root = jsonBuffer.createObject(); // On declare un objet root de type Json  dans le buffer qui a ete precedemment créee 
 void setup(){
   unsigned status;
 
@@ -58,20 +58,20 @@ bool isThereFire(){
     delay(10);
     }
     sum = 0;
-    if (avg> 300){return 1;}
+    if (avg> 300){return 1;}// Si la valeur recuperer par le capteur depasse 300, on retourne 1 cad presence de feu
     
     else{return 0;}
 }
 
 void sendjson(){
     
-    root["temperature"] = bme.readTemperature();
-    root["pression"] = bme.readPressure() / 100.0F;
-    root["altitude"] = bme.readAltitude(SEALEVELPRESSURE_HPA);
-    root["humidite"] = bme.readHumidity();
-    root["feu"] = feu;
+    root["temperature"] = bme.readTemperature();// Dans notre objet on declarer une info temperature et on recupere la donnée aupres du capteur
+    root["pression"] = bme.readPressure() / 100.0F;// Idem pour la pression
+    root["altitude"] = bme.readAltitude(SEALEVELPRESSURE_HPA);//Idem pour l'altittude
+    root["humidite"] = bme.readHumidity();//Idem pour l'humidité
+    root["feu"] = feu;//On recupere la valeur de l'intentié de la flamme
     
-    root.printTo(Serial1);
+    root.printTo(Serial1);// On recupere l'objet Json dans le serial
 
 }
 
